@@ -32,13 +32,16 @@ Requirements: MATLAB (tested on R2023b).
    ```  
    Output: `S_sweep_T.pdf`
 
-## Figures (in `figures/`)
+## Figures
 
-- **`local_optimality_M1.pdf`** — Excess action ΔS vs normalised control distance $R_\delta/c$ for perturbations around the optimal control $w^\star$; *single realisation per control* (stochastic variability may yield $S<S^\star$).  
-- **`local_optimality_M100.pdf`** — Same test but *averaged over 100 trajectories per control*; reveals a quadratic minimum at $R_\delta/c=0$ with curvature $\frac{1}{2} mc^2 T$.  
-- **`S_sweep_T.pdf`** — Time–step stability of the normalised stochastic action $\Re \langle S
-\rangle/(\hbar\omega_c T)$ vs $T/T_c$ for $\Delta t=T_c/100,\ T_c/1000,\ T_c/10000$.
+![Local optimality (M=1)](figures/local_optimality_M1.png)  
+Excess action $\Delta S$ vs normalised control distance $R_\delta/c$ for perturbations around the optimal control $w^\star$; *single realisation per control* (stochastic variability can yield $S<S^\star$ even at small $R_\delta/c$).
 
+![Local optimality (M=100)](figures/local_optimality_M100.png)  
+Same test but *averaged over 100 trajectories per control*; the minimum at $R_\delta/c=0$ is quadratic, with theoretical curvature $\tfrac{1}{2}\,m c^2 T$ (i.e., $\mathbb{E}[\Delta S]\approx \tfrac{1}{2}\,m c^2 T\,R_\delta^2$ for small $R_\delta/c$).
+
+![Stability sweep](figures/S_sweep_T.png)  
+Time–step stability of the normalised stochastic action $\Re\langle S\rangle/(\hbar\omega_c T)$ vs $T/T_c$ for $\Delta t=T_c/100,\ T_c/1000,\ T_c/10000$; the value relaxes toward the Dirac–Landau prediction set by $(n,s)$.
 
 ## Results table (paper values)
 
