@@ -9,6 +9,7 @@ Requirements: MATLAB (tested on R2023b).
 
 1) **Local optimality test**  
    Runs admissible perturbations around the optimal drift and saves one figure per run.
+   
    Edit `run_demo_local_optimality.m`. Modify `N_avg` parameter possible values: 1 or 100.
    ```matlab
    N_avg     = 100;
@@ -18,13 +19,13 @@ Requirements: MATLAB (tested on R2023b).
    ```  
    Outputs: `local_optimality_M1.pdf`, `local_optimality_M100.pdf`
 
-2) **Action components report**  
+3) **Action components report**  
    Computes the mean kinetic, electromagnetic, spin, and total action under the optimal drift and prints a small table to the console.  
    ```matlab
    run('run_optimal_action_report.m')
    ```
 
-3) **Time–step stability sweep**  
+4) **Time–step stability sweep**  
    Sweeps the horizon/step size and plots the normalised action to assess stability.  
    ```matlab
    run('run_sweep_T_report_S_statistics.m')
@@ -33,20 +34,19 @@ Requirements: MATLAB (tested on R2023b).
 
 ## Figures (in `figures/`)
 
-- **`local_optimality_M1.pdf`** — Excess action ΔS vs normalised control distance \(R_\delta/c\) for perturbations around the optimal control \(w^*\); *single realisation per control* (stochastic variability may yield \(S<S^*\)).  
-- **`local_optimality_M100.pdf`** — Same test but *averaged over 100 trajectories per control*; reveals a quadratic minimum at \(R_\delta/c=0\) with curvature \(	frac{1}{2} mc^2 T\).  
-- **`S_sweep_T.pdf`** — Time–step stability of the normalised stochastic action \(\Re\langle S
-angle/(\hbar\omega_c T)\) vs \(T/T_c\) for \(\Delta t=T_c/100,\ T_c/1000,\ T_c/10000\).
+- **`local_optimality_M1.pdf`** — Excess action ΔS vs normalised control distance $R_\delta/c$ for perturbations around the optimal control $w^\star$; *single realisation per control* (stochastic variability may yield $S<S^\star$).  
+- **`local_optimality_M100.pdf`** — Same test but *averaged over 100 trajectories per control*; reveals a quadratic minimum at $R_\delta/c=0$ with curvature $\frac{1}{2} mc^2 T$.  
+- **`S_sweep_T.pdf`** — Time–step stability of the normalised stochastic action $\Re \langle S
+\rangle/(\hbar\omega_c T)$ vs $T/T_c$ for $\Delta t=T_c/100,\ T_c/1000,\ T_c/10000$.
 
 
 ## Results table (paper values)
 
-Mean physical action components normalised by \(\hbar\omega_c T\) (electron in uniform \(B\), Landau gauge).
+Mean physical action components normalised by $\hbar\omega_c T$ (electron in uniform $B$, Landau gauge).
 
-> Notes: \(S_{
-m kin}=0\) by on–shell closure; the EM piece includes the Itô covariation +1/2 shift; numbers below are the reported means, with “Theory” the Dirac–Landau value.
+> Notes: $S_{kin}=0$ by on–shell closure; the EM piece includes the Itô covariation +1/2 shift; numbers below are the reported means, with “Theory” the Dirac–Landau value.
 
-| State (n,s) | ⟨SEM⟩\_phys | ⟨SSP⟩\_phys | ⟨S\_{kin}⟩\_phys | ⟨S\_{tot}⟩\_phys | Theory ⟨S\_{tot}⟩ |
+| State (n,s) | ⟨SEM⟩\_phys | ⟨SSP⟩\_phys | ⟨S_kin⟩\_phys | ⟨S_tot⟩\_phys | Theory ⟨S\_tot⟩ |
 |---|---:|---:|---:|---:|---:|
 | (0, −1) | −0.4826 | +0.5000 | 0.0000 | +0.0174 | 0.0000 |
 | (0, +1) | −0.4829 | −0.5000 | 0.0000 | −0.9829 | −1.0000 |
@@ -55,4 +55,4 @@ m kin}=0\) by on–shell closure; the EM piece includes the Itô covariation +1/
 
 ---
 
-**Normalisation:** \(S_{\rm norm}=S/(\hbar\omega_c T)\), typical settings in the paper use \(B=0.1\,\text{T}\), \(T=5T_c\), \(N_{\rm traj}=10^4\), \(N_t=10^4\).
+**Normalisation:** $S_{\rm norm}=S/(\hbar\omega_c T)$, typical settings in the paper use $B=0.1\,\text{T}$, $T=5T_c$, $N_{\rm traj}=10^4$, $N_t=10^4$.
