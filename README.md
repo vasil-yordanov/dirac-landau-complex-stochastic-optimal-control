@@ -10,7 +10,7 @@ Requirements: MATLAB (tested on R2023b).
 1) **Local optimality test**  
    Runs admissible perturbations around the optimal drift and saves one figure per run.
    
-   Edit `run_demo_local_optimality.m`. Modify `N_avg` parameter possible values: 1 or 100.
+   Edit `run_demo_local_optimality.m`. Modify `N_avg` parameter possible values: 1 and 100.
    ```matlab
    N_avg     = 100;
    ```   
@@ -26,7 +26,12 @@ Requirements: MATLAB (tested on R2023b).
    ```
 
 4) **Time–step stability sweep**  
-   Sweeps the horizon/step size and plots the normalised action to assess stability.  
+   Sweeps the horizon/step size and plots the normalised action to assess stability.
+   
+   Edit `run_sweep_T_report_S_statistics.m`. Modify `Ntc_per_Tc` parameter possible values: 100, 1000 and 10000.
+   ```matlab
+   Ntc_per_Tc     = 1000;
+   ```   
    ```matlab
    run('run_sweep_T_report_S_statistics.m')
    ```  
