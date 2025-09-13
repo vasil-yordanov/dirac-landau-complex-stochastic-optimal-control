@@ -1,4 +1,4 @@
-# Dirac–Landau Complex SOC — Repro Scripts
+# Dirac–Landau Complex SOC
 
 This repo accompanies the paper *“Preserving Mass Shell Condition in the Stochastic Optimal Control Derivation of the Dirac Equation”*. 
 It contains three small MATLAB scripts to reproduce the figures and the action-components table.
