@@ -16,6 +16,7 @@ N_tc      = 800;          % number of time steps
 N_pol     = 200;          % number of scattered policies
 N_opt_avg = 200;          % number of optimal poliies to average
 
+lambda_gauge = 'weak_mass_sell';
 % deterministic-mode control: deterministic directions, among several fixed comtrol directions
 mode      = 'deterministic';
 A_max     = 2e-5;         % max deviation amplitude
@@ -35,13 +36,14 @@ Tc  = 2*pi/wc;        % Cyclotron period
 T   = 5*Tc;
 dt  = T / N_tc;
 Nt  = N_tc;
+epsilon = 1; % 1- electron ; 2 -positron
 
 %% Optimal control, no deviation
     
 S0_accum = 0;
 for m = 1:N_opt_avg
     rng(7 + 1000*m, 'twister');   % independent noise per replicate
-    [Sm, ~, ~, ~, ~] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, []);
+    [Sm, ~, ~, ~, ~] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon, lambda_gauge);
     S0_accum = S0_accum + Sm;
 end
 S0 = S0_accum / N_opt_avg;
@@ -60,7 +62,7 @@ for i = 1:N_pol
     R_accum = 0;
     for m = 1:N_avg
         rng(137 + 1000*i + m, 'twister');   % independent noise per replicate
-        [S_im, ~, ~, ~, R_im] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev);
+        [S_im, ~, ~, ~, R_im] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon, lambda_gauge);
         S_accum = S_accum + S_im;
         R_accum = R_accum + R_im;
     end

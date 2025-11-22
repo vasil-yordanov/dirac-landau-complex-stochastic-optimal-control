@@ -8,6 +8,8 @@ Ntraj     = 10000;
 Nt        = 10000;       % steps per T
 ky  = 0;
 pz  = 0;
+epsilon = 1; % 1- electron ; 2 -positron
+lambda_gauge = 'weak_mass_sell';
 
 % ---- constants & scalars ----
 C   = phys_constants();
@@ -47,7 +49,7 @@ for i = 1:np
 
     parfor r = 1:Ntraj
         rng(137 + r*1000 + i*5000);  % reproducible
-        [St, Sk, Se, Ss] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, []);
+        [St, Sk, Se, Ss] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon, lambda_gauge);
         S_tot_vec(r) = real(St);
         S_kin_vec(r) = real(Sk);
         S_EM_vec(r)  = real(Se);
@@ -77,7 +79,7 @@ for i = 1:np
     nBoot = 5000;
     rng(42);
     boot_mean = @(x) mean(x / s_norm);
-    
+
     bmTOT = zeros(nBoot,1);
     bmKIN = zeros(nBoot,1);
     bmEM = zeros(nBoot,1);
