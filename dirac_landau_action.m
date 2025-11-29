@@ -1,5 +1,5 @@
-function [S, S_Lk, S_LEM, S_Lsp, R, w_store, z_store] = dirac_landau_action(
-        n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon, lambda_gauge
+function [S, S_Lk, S_LEM, S_Lsp, R, w_store, z_store] = dirac_landau_action(...
+        n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon, lambda_gauge...
     )
 
     C = phys_constants();
