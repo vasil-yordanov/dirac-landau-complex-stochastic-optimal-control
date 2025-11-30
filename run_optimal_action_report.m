@@ -9,7 +9,7 @@ Nt        = 10000;       % steps per T
 ky  = 0;
 pz  = 0;
 epsilon = 1; % 1 - electron ; 2 - positron
-lambda_gauge = 'dirac'; % 'weak_mass_sell'; 'dirac'
+lambda_gauge = 'weak_mass_sell'; % 'weak_mass_sell'; 'dirac'
 
 % ---- constants & scalars ----
 C   = phys_constants();
@@ -72,7 +72,7 @@ for i = 1:np
     vSP_th  = real(S_th_SP) / s_norm;
     vKIN    = real(S_kin) / s_norm;
     vKIN_th = real(S_th_kin) / s_norm;
-    vTOT    = real(S_tot) / s_norm;
+    vTOT    = real(S_tot) / s_norm + ito_covar_corr;
     vTOT_th = real(S_th_tot) / s_norm;
 
     % ---- 95% percentile bootstrap CIs (normalized) ----
@@ -93,7 +93,7 @@ for i = 1:np
         bmEM(bb)  = boot_mean(S_EM_vec(idx));
         bmSP(bb)  = boot_mean(S_SP_vec(idx));
     end
-    vTOT_ci = quantile(bmTOT, [0.025 0.975]).';
+    vTOT_ci = quantile(bmTOT, [0.025 0.975]).' + ito_covar_corr;
     vKIN_ci = quantile(bmKIN, [0.025 0.975]).';
     vEM_ci  = quantile(bmEM,  [0.025 0.975]).' + ito_covar_corr;
     vSP_ci  = quantile(bmSP,  [0.025 0.975]).';
