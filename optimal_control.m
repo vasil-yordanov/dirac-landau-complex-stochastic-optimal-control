@@ -1,22 +1,14 @@
-function [w] = optimal_control(n, s_spin, z, ky, pz, B, epsilon, lambda_gauge)
+function [w] = optimal_control(n, s_spin, z, ky, pz, B, epsilon)
     C = phys_constants();
 
     A  = complex([0; 0; B*z(2); 0]);    
-    g = grad_ln_phi(n, z(2), ky, pz, B, lambda_gauge);
+    g = grad_ln_phi(n, z(2), ky, pz, B);
 
     w = epsilon*(1i*C.hbar/C.m) * g - (epsilon * C.e_q/C.m) * A;
 
-    if strcmpi(lambda_gauge, 'weak_mass_sell')
-        sp2 = w(2)^2 + w(3)^2 + w(4)^2;
-        w0_shell = sqrt(C.c^2 + sp2);
-        if real(w0_shell) < 0, w0_shell = -w0_shell; end
-        w(1) = w0_shell;
-    elseif strcmpi(lambda_gauge, 'dirac')
-        E = dirac_landau_energy(n, s_spin, B, pz, C);
-        w(1) = epsilon * (E / (C.m * C.c));
-    else
-        error('optimal_control: only lambda_gauge=dirac or lambda_gauge=weak_mass_sell are implemented.');
-    end
+    E = dirac_landau_energy(n, s_spin, B, pz, C);
+    w(1) = epsilon * (E / (C.m * C.c));
+    
 end
 
 

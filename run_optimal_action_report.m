@@ -9,7 +9,6 @@ Nt        = 10000;       % steps per T
 ky  = 0;
 pz  = 0;
 epsilon = 1; % 1 - electron ; 2 - positron
-lambda_gauge = 'weak_mass_sell'; % 'weak_mass_sell'; 'dirac'
 
 % ---- constants & scalars ----
 C   = phys_constants();
@@ -49,9 +48,9 @@ for i = 1:np
 
     parfor r = 1:Ntraj
         rng(137 + r*1000 + i*5000);  % reproducible
-        [St, Sk, Se, Ss] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon, lambda_gauge);
-        S_tot_vec(r) = real(St);
-        S_kin_vec(r) = real(Sk);
+        [St, Sk, Se, Ss] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon);
+        S_tot_vec(r) = real(Se +Ss); % See Appendix A.5
+        S_kin_vec(r) = 0;
         S_EM_vec(r)  = real(Se);
         S_SP_vec(r)  = real(Ss);
     end
@@ -72,12 +71,12 @@ for i = 1:np
     vSP_th  = real(S_th_SP) / s_norm;
     vKIN    = real(S_kin) / s_norm;
     vKIN_th = real(S_th_kin) / s_norm;
-    vTOT    = real(S_tot) / s_norm + ito_covar_corr;
+    vTOT    = real(S_tot) / s_norm + ito_covar_corr; 
     vTOT_th = real(S_th_tot) / s_norm;
 
     % ---- 95% percentile bootstrap CIs (normalized) ----
     nBoot = 5000;
-    rng(42);
+    rng(137);
     boot_mean = @(x) mean(x / s_norm);
 
     bmTOT = zeros(nBoot,1);

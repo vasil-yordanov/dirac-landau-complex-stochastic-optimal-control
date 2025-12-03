@@ -14,7 +14,6 @@ B      = 0.1;                % Tesla
 ky     = 0;
 pz     = 0;
 epsilon = 1; % 1- electron ; 2 -positron
-lambda_gauge = 'weak_mass_sell';
 
 C   = phys_constants();
 wc  = abs(C.e_q)*B/C.m;
@@ -30,7 +29,7 @@ z_init(2) = X0 + 2*lB;
 p_dev = [];
 
 %% ----- sweep settings -----
-Ntc_per_Tc = 10000;   % steps per cyclotron period
+Ntc_per_Tc = 1000;   % steps per cyclotron period
 m_list     = [0.001 0.005 0.007 0.01 0.02 0.1 0.2 0.3 0.4 0.5 1 1.5 2 5 10 20 50 70 100 150 200 250 300, 400, 500, 1000];
 
 if Ntc_per_Tc == 100
@@ -64,13 +63,15 @@ for it = 1:numel(T_list)
     % per-T buffer (sliced variable for parfor)
     S_vec = nan(1, Nrun);
 
+    ito_covar_corr = 0.5;
+
     % ---- parallel seed loop ----
     parfor ir = 1:Nrun
         % deterministic per-seed RNG (order-independent)
         rng(base_seed + ir, 'twister');
 
-        [S, ~, ~, ~] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon, lambda_gauge);
-        S_vec(ir) = real(S) / (C.hbar * wc * T);   % S_norm
+        [S, S_Lk, S_LEM, S_Lsp] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon);
+        S_vec(ir) = real(S_LEM + S_Lsp) / (C.hbar * wc * T)  + ito_covar_corr;   % See Appendix A.5
     end
 
     % aggregate

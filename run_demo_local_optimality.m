@@ -16,12 +16,11 @@ N_tc      = 800;          % number of time steps
 N_pol     = 200;          % number of scattered policies
 N_opt_avg = 200;          % number of optimal poliies to average
 
-lambda_gauge = 'weak_mass_sell';
 % deterministic-mode control: deterministic directions, among several fixed comtrol directions
 mode      = 'deterministic';
 A_max     = 2e-5;         % max deviation amplitude
 %N_avg     = 1;          % number of policies to average
-N_avg     = 100;
+N_avg     = 1000;
 
 % random-mode control: fully random direction & amplitude
 % in this mode M != 1 makes no sense since we wll not averaging
@@ -38,12 +37,18 @@ dt  = T / N_tc;
 Nt  = N_tc;
 epsilon = 1; % 1- electron ; 2 -positron
 
+% Figure styling (match 2D plots elsewhere)
+FS_AX  = 16;
+FS_LAB = 20;
+FS_LEG = 15;
+FS_TIT = 20;
+
 %% Optimal control, no deviation
     
 S0_accum = 0;
 for m = 1:N_opt_avg
     rng(7 + 1000*m, 'twister');   % independent noise per replicate
-    [Sm, ~, ~, ~, ~] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon, lambda_gauge);
+    [Sm, ~, ~, ~, ~] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, [], epsilon);
     S0_accum = S0_accum + Sm;
 end
 S0 = S0_accum / N_opt_avg;
@@ -62,7 +67,7 @@ for i = 1:N_pol
     R_accum = 0;
     for m = 1:N_avg
         rng(137 + 1000*i + m, 'twister');   % independent noise per replicate
-        [S_im, ~, ~, ~, R_im] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon, lambda_gauge);
+        [S_im, ~, ~, ~, R_im] = dirac_landau_action(n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon);
         S_accum = S_accum + S_im;
         R_accum = R_accum + R_im;
     end
@@ -85,48 +90,49 @@ kappa_fit = (R2 * dS.') / (R2 * R2.');    % scalar slope
 kappa_th = kappa_theory(Nt, dt, mode);
 
 %5 -------- Plot --------------
-f = figure; hold on; box on; grid on;
+f = figure;
+ax = axes('Parent',f); hold(ax,'on'); box(ax,'on'); grid(ax,'on');
 
-scatter(R, dS, 10, 'filled', 'MarkerFaceAlpha', 0.75, 'DisplayName','policies');
-plot(0, 0, 'k*', 'MarkerSize', 7, 'DisplayName','optimal policy');
+scatter(ax, R, dS, 10, 'filled', 'MarkerFaceAlpha', 0.75, 'DisplayName','policies');
+plot(ax, 0, 0, 'k*', 'MarkerSize', 7, 'DisplayName','optimal policy');
 
 if N_avg >1
-    plot(xfit, kappa_th * (xfit.^2), 'k--', 'LineWidth', 1.4, ...
+    plot(ax, xfit, kappa_th * (xfit.^2), 'k--', 'LineWidth', 1.4, ...
          'DisplayName', 'theory: \Re \langle\Delta S\rangle = 1/2 m c^2 T R^2');
-    plot(xfit, kappa_fit * (xfit.^2), 'r-', 'LineWidth', 1.2, ...
+    plot(ax, xfit, kappa_fit * (xfit.^2), 'r-', 'LineWidth', 1.2, ...
          'DisplayName', sprintf('fit: \\Re \\langle\\Delta S\\rangle = k R^2'));
 else
-    plot(xfit, kappa_th * (xfit.^2), 'k--', 'LineWidth', 1.4, ...
+    plot(ax, xfit, kappa_th * (xfit.^2), 'k--', 'LineWidth', 1.4, ...
          'DisplayName', 'theory: \Re \Delta S = 1/2 m c^2 T R^2');
-    plot(xfit, kappa_fit * (xfit.^2), 'r-', 'LineWidth', 1.2, ...
+    plot(ax, xfit, kappa_fit * (xfit.^2), 'r-', 'LineWidth', 1.2, ...
          'DisplayName', sprintf('fit: \\Re \\Delta S = k R^2'));
 
 end
 
-set(gca, 'FontSize', 14);
+set(ax, 'FontSize', FS_AX);
 
 if N_avg > 1
-    t = title(sprintf('Averaged over %d samples per control', N_avg), 'Interpreter','latex');
+    t = title(ax, sprintf('Averaged over %d samples per control', N_avg), 'Interpreter','latex');
 else
-    t = title('Single sample per control', 'Interpreter','latex');
+    t = title(ax, 'Single sample per control', 'Interpreter','latex');
 end
-t.FontSize = 19;
+t.FontSize = FS_TIT;
 
 
-xt = xlabel('$R_{\delta}/c$', 'Interpreter', 'latex');
-xt.FontSize = 19;
+xt = xlabel(ax, '$R_{\delta}/c$', 'Interpreter', 'latex');
+xt.FontSize = FS_LAB;
 if N_avg >1
-    xt = ylabel('$\Re \, \langle S\rangle - \Re \, \langle S^{*}\rangle  \, [\mathrm{J \cdot s}]$', 'Interpreter','latex');
+    xt = ylabel(ax, '$\Re \, \langle S\rangle - \Re \, \langle S^{*}\rangle  \, [\mathrm{J \cdot s}]$', 'Interpreter','latex');
 else
-    xt = ylabel('$\Re \, S - \Re \, S^{*} \, [\mathrm{J \cdot s}]$', 'Interpreter','latex');
+    xt = ylabel(ax, '$\Re \, S - \Re \, S^{*} \, [\mathrm{J \cdot s}]$', 'Interpreter','latex');
 end
-xt.FontSize = 19;
-lt = legend('Location','northwest');
-lt.FontSize = 14;
+xt.FontSize = FS_LAB;
+lt = legend(ax, 'Location','northwest');
+lt.FontSize = FS_LEG;
 
-ylim([-1.5e-32 3.5e-32]);
+ylim(ax,[-1.5e-32 3.5e-32]);
 
-filename = sprintf('local_optimality_M%d.pdf', N_avg);
+filename = fullfile('figures', sprintf('figure_local_optimality_M%d.pdf', N_avg));
 
 exportgraphics(f, filename, ...
     'ContentType', 'vector', ...

@@ -1,5 +1,5 @@
 function [S, S_Lk, S_LEM, S_Lsp, R, w_store, z_store] = dirac_landau_action(...
-        n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon, lambda_gauge...
+        n, s_spin, B, dt, Nt, z_init, ky, pz, p_dev, epsilon...
     )
 
     C = phys_constants();
@@ -21,7 +21,7 @@ function [S, S_Lk, S_LEM, S_Lsp, R, w_store, z_store] = dirac_landau_action(...
     for k = 1:Nt
         A  = complex([0; 0; B*z(2); 0]);    
 
-        [w] = optimal_control(n, s_spin, z, ky, pz, B, epsilon, lambda_gauge);
+        [w] = optimal_control(n, s_spin, z, ky, pz, B, epsilon);
 
         if ~isempty(p_dev)               
             delta = tangent_spacelike_delta(w, p_dev, k);  
